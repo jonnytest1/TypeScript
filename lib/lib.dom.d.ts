@@ -10907,6 +10907,9 @@ declare var PannerNode: {
     new(context: BaseAudioContext, options?: PannerOptions): PannerNode;
 };
 
+type SelectorType<T extends string, E> = T extends `${string} ${infer U extends keyof HTMLElementTagNameMap}`
+    ? HTMLElementTagNameMap[U] : E
+
 interface ParentNode {
     readonly childElementCount: number;
     /**
@@ -10938,13 +10941,13 @@ interface ParentNode {
      */
     querySelector<K extends keyof HTMLElementTagNameMap>(selectors: K): HTMLElementTagNameMap[K] | null;
     querySelector<K extends keyof SVGElementTagNameMap>(selectors: K): SVGElementTagNameMap[K] | null;
-    querySelector<E extends Element = Element>(selectors: string): E | null;
+    querySelector<T extends string, E extends Element = Element>(selector: T): SelectorType<T, E> | null
     /**
      * Returns all element descendants of node that match selectors.
      */
     querySelectorAll<K extends keyof HTMLElementTagNameMap>(selectors: K): NodeListOf<HTMLElementTagNameMap[K]>;
     querySelectorAll<K extends keyof SVGElementTagNameMap>(selectors: K): NodeListOf<SVGElementTagNameMap[K]>;
-    querySelectorAll<E extends Element = Element>(selectors: string): NodeListOf<E>;
+    querySelectorAll<T extends string, E extends Element = Element>(selectors: T): NodeListOf<SelectorType<T, E>>;
     /**
      * Replace all children of node with nodes, while replacing strings in nodes with equivalent Text nodes.
      *
